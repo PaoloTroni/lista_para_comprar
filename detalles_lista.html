@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Detalles de la Lista</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" />
+</head>
+
+<body class="container py-4">
+    <h1>Detalles de la Lista</h1>
+
+    <button class="btn btn-outline-primary mb-3" onclick="window.location.href='index.html'">
+        ← Volver a Inicio
+    </button>
+
+    <div id="detallesLista"></div>
+
+    <script>
+        function obtenerParametroURL(nombre) {
+            const params = new URLSearchParams(window.location.search);
+            return params.get(nombre);
+        }
+
+        function cargarDetalles() {
+            const index = obtenerParametroURL('index');
+            const listasJSON = localStorage.getItem('listas');
+
+            if (listasJSON) {
+                const listas = JSON.parse(listasJSON);
+                const lista = listas[index];
+
+                if (lista) {
+                    const detallesDiv = document.getElementById('detallesLista');
+                    detallesDiv.innerHTML = `
+                        <h3>${lista.nombre || 'Sin Nombre'}</h3>
+                        <p><strong>Fecha/Hora:</strong> ${lista.dataHora}</p>
+                        <p><strong>Presupuesto:</strong> € ${lista.presupuesto.toFixed(2)}</p>
+                        <h4>Artículos:</h4>
+                        <ul class="list-group">
+                          ${lista.items.map(item => `
+                            <li class="list-group-item">
+                              ${item.nombre} - ${item.cantidad} x € ${item.precio.toFixed(2)} ${item.ok ? '(ok)' : ''}
+                            </li>
+                          `).join('')}
+                        </ul>
+                    `;
+                } else {
+                    document.getElementById('detallesLista').innerHTML = '<p>Lista no encontrada.</p>';
+                }
+            } else {
+                document.getElementById('detallesLista').innerHTML = '<p>No hay ninguna lista guardada.</p>';
+            }
+        }
+
+        cargarDetalles();
+    </script>
+</body>
+
+</html>

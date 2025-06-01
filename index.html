@@ -3,110 +3,129 @@
 
 <head>
     <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>🛒 Home ¡Lista para comprar</title>
+    <!-- CSS de Bootstrap -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" />
+    <!-- CSS personalizado -->
+    <link rel="stylesheet" href="base.css">
+    <link rel="stylesheet" href="index.css">
+
 </head>
 
-<body class="container py-4">
-    <h1>🛒 ¡Lista para comprar</h1>
+<body class="py-4">
+    <div class="container py-4">
+        <h1>¡Lista para comprar! 🛒</h1>
 
-    <!-- Botón para crear nueva lista -->
-    <div class="mb-3">
-        <button class="btn btn-success" onclick="window.location.href='lista_form.html'">
-            + Nueva Lista
-        </button>
-    </div>
-    <h2>Listas Guardadas</h2>
+        <!-- Botón para crear nueva lista -->
+        <div class="mb-3">
+            <button class="btn btn-success" onclick="window.location.href='lista_form.html'">
+                + Nueva Lista
+            </button>
+        </div>
+        <h2>Mis listas:</h2>
 
-    <ul id="listaListas" class="list-group my-4">
-        <!-- Listas cargadas aquí -->
-    </ul>
+        <ul id="listaListas" class="list-group my-4">
+            <!-- Listas cargadas aquí -->
+        </ul>
 
-    <script>
-        function cargarListas() {
-            const listaListas = document.getElementById("listaListas");
-            listaListas.innerHTML = "";
 
-            const listasJSON = localStorage.getItem("listas"); // Busca la clave "listas"
-            if (listasJSON) {
-                const listas = JSON.parse(listasJSON);
+        <script>
+            function cargarListas() {
+                const listaListas = document.getElementById("listaListas");
+                listaListas.innerHTML = "";
 
-                listas.forEach((lista, index) => {
-                    const item = document.createElement("li");
-                    item.className =
-                        "list-group-item d-flex justify-content-between align-items-center";
-
-                    item.innerHTML = `
-                        <div>
-                            <strong>${lista.nombre || "Sin Nombre"}</strong><br>
-                            <small>${lista.dataHora}</small>
-                        </div>
-                        <div>
-                            <button class="btn btn-sm btn-primary me-2" onclick="verDetalles(${index})">Ver Detalles</button>
-                            <button class="btn btn-sm btn-secondary me-2" onclick="duplicarLista(${index})">Duplicar</button>
-                            <button class="btn btn-sm btn-warning me-2" onclick="editarLista(${index})">Editar</button>
-                            <button class="btn btn-sm btn-danger" onclick="eliminarLista(${index})">Eliminar</button>
-                        </div>
-                    `;
-
-                    listaListas.appendChild(item);
-                });
-            } else {
-                listaListas.innerHTML =
-                    '<li class="list-group-item">No se encontraron listas.</li>';
-            }
-        }
-
-        function verDetalles(index) {
-            window.location.href = `detalles_lista.html?index=${index}`;
-        }
-
-        function duplicarLista(index) {
-            const listasJSON = localStorage.getItem("listas");
-            if (listasJSON) {
-                const listas = JSON.parse(listasJSON);
-                const original = listas[index];
-                if (original) {
-                    const copia = { ...original };
-                    copia.nombre = (original.nombre || "Sin Nombre") + " (Copia)";
-                    // Fecha y hora formateada en zona horaria española
-                    copia.dataHora = new Date().toLocaleString("es-ES", {
-                        timeZone: "Europe/Madrid",
-                        hour: "2-digit",
-                        minute: "2-digit",
-                        day: "2-digit",
-                        month: "2-digit",
-                        year: "numeric",
-                    });
-
-                    listas.push(copia);
-                    localStorage.setItem("listas", JSON.stringify(listas));
-                    alert(`Lista duplicada como "${copia.nombre}"`);
-                    cargarListas(); // Recargar
-                }
-            }
-        }
-
-        function editarLista(index) {
-            window.location.href = `lista_form.html?index=${index}`;
-        }
-
-        function eliminarLista(index) {
-            const confirmacion = confirm("¿Estás seguro de que deseas eliminar esta lista?");
-            if (confirmacion) {
                 const listasJSON = localStorage.getItem("listas");
                 if (listasJSON) {
                     const listas = JSON.parse(listasJSON);
-                    listas.splice(index, 1); // Quitar lista del array
-                    localStorage.setItem("listas", JSON.stringify(listas));
-                    alert("Lista eliminada con éxito.");
-                    cargarListas(); // Recargar lista
+
+                    listas.forEach((lista, index) => {
+                        const item = document.createElement("li");
+                        item.className = "list-group-item d-flex justify-content-between align-items-center";
+
+                        const infoDiv = document.createElement("div");
+                        infoDiv.className = "info-clicable";
+                        infoDiv.style.flex = "1";
+                        infoDiv.innerHTML = `
+                    <strong>${lista.nombre || "Sin Nombre"} ✏️</strong><br>
+                    <small>${lista.dataHora}</small>
+                `;
+                        infoDiv.onclick = () => {
+                            infoDiv.classList.add("tocado");
+                            setTimeout(() => infoDiv.classList.remove("tocado"), 500);
+                            editarLista(index);
+                        };
+
+                        const botonesDiv = document.createElement("div");
+
+                        // Mejor usar window.innerWidth para detectar ancho de pantalla
+                        const esMobile = window.innerWidth <= 768;
+
+                        if (esMobile) {
+                            botonesDiv.innerHTML = `
+        <button class="btn btn-sm btn-icon btn-duplicar" onclick="event.stopPropagation(); duplicarLista(${index})" aria-label="Duplicar">🔁</button>
+        <button class="btn btn-sm btn-icon btn-eliminar" onclick="event.stopPropagation(); eliminarLista(${index})" aria-label="Eliminar">❌</button>
+    `;
+                        } else {
+                            botonesDiv.innerHTML = `
+        <button class="btn btn-sm btn-secondary me-2" onclick="event.stopPropagation(); duplicarLista(${index})">Duplicar</button>
+        <button class="btn btn-sm btn-danger" onclick="event.stopPropagation(); eliminarLista(${index})">Eliminar</button>
+    `;
+                        }
+
+                        item.appendChild(infoDiv);
+                        item.appendChild(botonesDiv);
+                        listaListas.appendChild(item);
+                    });
+                } else {
+                    listaListas.innerHTML = '<li class="list-group-item">No se encontraron listas.</li>';
                 }
             }
-        }
 
-        cargarListas();
-    </script>
+            function editarLista(index) {
+                window.location.href = `lista_form.html? index = ${index}`;
+            }
+
+            function duplicarLista(index) {
+                const listasJSON = localStorage.getItem("listas");
+                if (listasJSON) {
+                    const listas = JSON.parse(listasJSON);
+                    const original = listas[index];
+                    if (original) {
+                        const copia = { ...original };
+                        copia.nombre = (original.nombre || "Sin Nombre") + " (Copia)";
+                        copia.dataHora = new Date().toLocaleString("es-ES", {
+                            timeZone: "Europe/Madrid",
+                            hour: "2-digit",
+                            minute: "2-digit",
+                            day: "2-digit",
+                            month: "2-digit",
+                            year: "numeric",
+                        });
+                        listas.push(copia);
+                        localStorage.setItem("listas", JSON.stringify(listas));
+                        alert(`Lista duplicada como "${copia.nombre}"`);
+                        cargarListas();
+                    }
+                }
+            }
+
+            function eliminarLista(index) {
+                if (confirm("¿Estás seguro de que deseas eliminar esta lista?")) {
+                    const listasJSON = localStorage.getItem("listas");
+                    if (listasJSON) {
+                        const listas = JSON.parse(listasJSON);
+                        listas.splice(index, 1);
+                        localStorage.setItem("listas", JSON.stringify(listas));
+                        alert("Lista eliminada con éxito.");
+                        cargarListas();
+                    }
+                }
+            }
+
+            cargarListas();
+        </script>
+    </div>
 </body>
 
 </html>

@@ -4,8 +4,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>🛒 Lista de Compras</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <title>🛒 ¡Lista para comprar</title>
+    <!-- CSS de Bootstrap -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" />
+    <!-- CSS personalizado -->
+    <link rel="stylesheet" href="base.css">
+    <link rel="stylesheet" href="lista_form.css">
 </head>
 
 <body class="p-3">
@@ -80,7 +84,8 @@
                 row.innerHTML = `
                     <td><input type="text" value="${item.nombre}" onchange="actualizarItem(${index}, 'nombre', this.value)"></td>
                     <td><input type="number" value="${item.cantidad}" min="1" onchange="actualizarItem(${index}, 'cantidad', this.value)"></td>
-                    <td><input type="number" step="0.01" value="${item.precio}" min="0" onchange="actualizarItem(${index}, 'precio', this.value)"></td>
+                    <td><input type="number" step="0.01" value="${item.precio === 0 ? '' : item.precio}" min="0" onchange="actualizarItem(${index}, 'precio', this.value)">
+</td>
                     <td id="precioTotal${index}">${(item.cantidad * item.precio).toFixed(2)}</td>
                     <td><input type="checkbox" ${item.ok ? 'checked' : ''} onchange="actualizarItem(${index}, 'ok', this.checked)"></td>
                     <td><button class="btn btn-sm btn-danger" onclick="eliminarItem(${index})">Eliminar</button></td>
@@ -95,7 +100,9 @@
 
         function actualizarItem(index, campo, valor) {
             if (campo === 'cantidad' || campo === 'precio') {
-                valor = parseFloat(valor) || 0;
+                let num = parseFloat(valor);
+                if (isNaN(num)) num = 0;
+                valor = num;
             }
             items[index][campo] = valor;
             const precioTotalElem = document.getElementById(`precioTotal${index}`);

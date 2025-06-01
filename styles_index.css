@@ -1,0 +1,66 @@
+ul#listaListas {
+    margin: 0;
+    padding: 0;
+}
+
+.list-group-item {
+    flex-grow: 0;
+    margin-bottom: 0;
+}
+
+@media (max-width: 768px) {
+    .botonesDiv {
+        display: flex;
+        flex-direction: column;
+        gap: 0.4rem;
+        /* espacio entre botones */
+    }
+
+    .btn-icon {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin: 0.2rem 0 0.2rem 0;
+        padding: 0.25rem 0.5rem;
+        font-size: 1.1rem;
+        width: 2.3rem;
+        height: 2.3rem;
+        background-color: rgba(255, 255, 255, 0.85);
+        border: 1.5px solid transparent;
+        border-radius: 0.375rem;
+        transition: all 0.2s ease;
+    }
+
+
+    .btn-duplicar {
+        border-color: #6c757d;
+        margin-top: 0.6rem
+    }
+
+    .btn-eliminar {
+        border-color: #dc3545;
+        margin-bottom: 0.6rem
+    }
+
+    .btn-icon:hover {
+        background-color: rgba(255, 255, 255, 1);
+        filter: brightness(0.9);
+    }
+}
+
+/* Estilo solo para el div clicable */
+.info-clicable {
+    cursor: pointer;
+    transition: background-color 0.2s, transform 0.1s;
+}
+
+.info-clicable:hover,
+.info-clicable.tocado {
+    background-color: #f0f0f0;
+    transform: scale(0.98);
+}
+
+.info-clicable:active {
+    background-color: #e0e0e0;
+    transform: scale(0.95);
+}

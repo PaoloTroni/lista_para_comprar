@@ -1,0 +1,156 @@
+/* Tabla principal */
+table.table {
+    width: 100%;
+}
+
+table.table thead {
+    display: none;
+}
+
+/* Inputs compactos */
+table.table input[type="text"],
+table.table input[type="number"] {
+    font-size: 0.9rem;
+    padding: 2px 6px;
+}
+
+/* Etiquetas pequeñas */
+table.table small {
+    color: #555;
+    font-weight: 600;
+}
+
+/* Tabla anidada */
+table.table table.table-borderless {
+    margin-bottom: 0;
+    width: 100%;
+}
+
+table.table table.table-borderless input {
+    font-size: 0.85rem;
+    padding: 2px 5px;
+    width: 60px;
+    /* Tamaño fijo para inputs pequeños */
+}
+
+/* Contenedor de la primera celda (producto) */
+.producto-container {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    width: 100%;
+}
+
+.producto-container input[type="checkbox"] {
+    transform: scale(1.2);
+    flex-shrink: 0;
+}
+
+.producto-container input[type="text"] {
+    flex: 1;
+    min-width: 0;
+}
+
+.producto-container button.btn-sm.btn-danger {
+    padding: 2px 8px;
+    font-size: 1.1rem;
+    line-height: 1;
+    flex-shrink: 0;
+    height: fit-content;
+}
+
+/* Contenedor horizontal para los tres campos */
+.detalles-horizontal {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    width: 100%;
+    gap: 8px;
+}
+
+.campo-detalle {
+    flex: 1;
+    text-align: center;
+    min-width: 0;
+    /* Permite que flex funcione correctamente */
+}
+
+.campo-detalle small {
+    display: block;
+    margin-bottom: 4px;
+    font-size: 0.8rem;
+}
+
+.campo-detalle input {
+    width: 100%;
+    max-width: 70px;
+    font-size: 0.85rem;
+    padding: 2px 4px;
+    text-align: center;
+}
+
+.campo-detalle span {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: #333;
+}
+
+/* Responsive móvil */
+@media (max-width: 1200px) {
+
+
+    table.table,
+    table.table tbody,
+    table.table tr,
+    table.table td {
+        display: block;
+        width: 100%;
+    }
+
+    table.table tr {
+        margin-bottom: 1rem;
+        border: 1px solid #ddd;
+        padding: 12px;
+        border-radius: 6px;
+        background-color: #fff;
+    }
+
+    table.table td {
+        padding: 6px 0;
+        text-align: left;
+        border: none;
+    }
+
+    /* Mantener los campos horizontales en móvil */
+    .detalles-horizontal {
+        margin-top: 10px;
+        gap: 6px;
+    }
+
+    .campo-detalle input {
+        max-width: 60px;
+    }
+
+    /* Ocultar flechas de los campos numéricos solo en móvil */
+    .campo-detalle input[type="number"] {
+        -moz-appearance: textfield;
+        /* Firefox */
+    }
+
+    .campo-detalle input[type="number"]::-webkit-outer-spin-button,
+    .campo-detalle input[type="number"]::-webkit-inner-spin-button {
+        -webkit-appearance: none;
+        /* Chrome, Safari, Edge */
+        margin: 0;
+    }
+
+    /* Ajuste para el contenedor del producto en móvil */
+    .producto-container {
+        gap: 6px;
+    }
+
+    /* Ajuste checkbox en móvil */
+    .producto-container input[type="checkbox"] {
+        transform: scale(1.1);
+    }
+}

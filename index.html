@@ -12,15 +12,21 @@
     <link rel="stylesheet" href="styles_index.css">
 </head>
 
-<body class="py-4">
+<body class="p-3">
+    <h1>🛒 ¡Lista para comprar!</h1>
     <div class="container py-4">
-        <h1>🛒 ¡Lista para comprar!</h1>
+
 
         <!-- Botón para crear nueva lista -->
         <div class="mb-3">
             <button class="btn btn-success" onclick="window.location.href='lista_form.html'">
                 + Nueva Lista
             </button>
+            <button class="btn btn-primary" onclick="document.getElementById('importFile').click()">
+                Importar Lista
+            </button>
+
+            <input type="file" id="importFile" accept=".json" style="display:none" onchange="importarLista(event)">
         </div>
         <h2>Mis listas:</h2>
 
@@ -30,6 +36,29 @@
 
 
         <script>
+            function exportarLista(index) {
+                const listasJSON = localStorage.getItem("listas");
+                if (!listasJSON) return alert("No hay listas para exportar.");
+
+                const listas = JSON.parse(listasJSON);
+                const lista = listas[index];
+                if (!lista) return alert("Lista no encontrada.");
+
+                const dataStr = JSON.stringify(lista, null, 2); // JSON con formato
+                const blob = new Blob([dataStr], { type: "application/json" });
+                const url = URL.createObjectURL(blob);
+
+                const a = document.createElement("a");
+                a.href = url;
+                a.download = `lista-${(lista.nombre || "sin-nombre").replace(/\s+/g, "_")}.json`;
+                document.body.appendChild(a);
+                a.click();
+
+                // Limpieza
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+            }
+
             function cargarListas() {
                 const listaListas = document.getElementById("listaListas");
                 listaListas.innerHTML = "";
@@ -64,12 +93,16 @@
                         if (esMobile) {
                             botonesDiv.innerHTML = `
         <button class="btn btn-sm btn-icon btn-duplicar" onclick="event.stopPropagation(); duplicarLista(${index})" aria-label="Duplicar">🔁</button>
+        <button class="btn btn-sm btn-icon btn-eliminar" onclick="event.stopPropagation(); exportarLista(${index})" aria-label="Exportar">📤</button>
         <button class="btn btn-sm btn-icon btn-eliminar" onclick="event.stopPropagation(); eliminarLista(${index})" aria-label="Eliminar">❌</button>
+        
     `;
                         } else {
                             botonesDiv.innerHTML = `
         <button class="btn btn-sm btn-secondary me-2" onclick="event.stopPropagation(); duplicarLista(${index})">Duplicar</button>
+        <button class="btn btn-sm btn-danger" onclick="event.stopPropagation(); exportarLista(${index})">Exportar</button>
         <button class="btn btn-sm btn-danger" onclick="event.stopPropagation(); eliminarLista(${index})">Eliminar</button>
+        
     `;
                         }
 
@@ -122,6 +155,37 @@
                     }
                 }
             }
+            function importarLista(event) {
+                const archivo = event.target.files[0];
+                if (!archivo) return;
+
+                const lector = new FileReader();
+                lector.onload = function (e) {
+                    try {
+                        const contenido = e.target.result;
+                        let listasImportadas = JSON.parse(contenido);
+
+                        // Si no es array, hacer array con ese objeto
+                        if (!Array.isArray(listasImportadas)) {
+                            listasImportadas = [listasImportadas];
+                        }
+
+                        const listasActualesJSON = localStorage.getItem("listas");
+                        const listasActuales = listasActualesJSON ? JSON.parse(listasActualesJSON) : [];
+
+                        const listasCombinadas = listasActuales.concat(listasImportadas);
+
+                        localStorage.setItem("listas", JSON.stringify(listasCombinadas));
+                        alert(`Importadas ${listasImportadas.length} listas correctamente.`);
+                        cargarListas();
+                    } catch (error) {
+                        alert("Error al leer el archivo JSON: " + error.message);
+                    }
+                };
+
+                lector.readAsText(archivo);
+            }
+
 
             cargarListas();
         </script>

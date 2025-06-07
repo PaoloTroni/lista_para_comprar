@@ -108,9 +108,9 @@ table.table table.table-borderless input {
     }
 
     table.table tr {
-        margin-bottom: 1rem;
+        margin-bottom: 0.6rem;
         border: 1px solid #ddd;
-        padding: 12px;
+        padding: 10px;
         border-radius: 6px;
         background-color: #fff;
     }

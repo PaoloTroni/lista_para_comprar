@@ -20,7 +20,14 @@
             onclick="window.location.href='index.html'" title="Volver al inicio">
             ⬅️
         </button>
+
     </div>
+
+    <!-- <h1>🛒 Lista para Comprar</h1>
+    <Botón para volver al inicio
+    <button class="btn btn-outline-primary mb-3" onclick="window.location.href='index.html'">
+        ← Volver al Inicio
+    </button> -->
 
 
     <div class="mb-3">
@@ -40,6 +47,8 @@
             <!-- Aquí se insertan las filas -->
         </tbody>
     </table>
+    <!-- 
+    <button class="btn btn-primary mt-3" onclick="agregarItem()">Agregar Producto</button> -->
 
     <div class="mt-3" style="line-height:1.1;">
         <p style="margin-bottom:0.5rem;">Total General: € <span id="totalGeneral">0.00</span></p>
@@ -117,9 +126,11 @@
 
             });
         }
+
         function agregarItem() {
             items.push({ nombre: '', cantidad: 1, precio: '', ok: false });
             renderizarTabla();
+
         }
 
         function actualizarItem(index, campo, valor) {
@@ -135,6 +146,21 @@
                 precioTotalElem.textContent = total.toFixed(2);
             }
             calcularTotales();
+            /*
+            // Solo agregamos un nuevo producto si el último ya tiene algo escrito
+            const ultimo = items[items.length - 1];
+            console.log(ultimo.nombre)
+            console.log(ultimo.precio)
+            if (
+                ultimo &&
+                ultimo.nombre.trim() !== '' &&
+                typeof ultimo.precio === 'number' &&
+                !isNaN(ultimo.precio)
+            ) {
+                agregarItem();
+
+            }
+            */
             guardarLista();
             addUltimo();
         }
@@ -153,8 +179,10 @@
                     !isNaN(ultimo.precio)
                 ) {
                     agregarItem();
+
                 }
             }
+
         }
 
         function eliminarItem(index) {
@@ -179,6 +207,9 @@
             const presupuesto = parseFloat(document.getElementById('presupuestoInicial').value) || 0;
 
             document.getElementById('totalGeneral').textContent = totalGeneral.toFixed(2);
+
+            // document.getElementById('totalComprado').textContent = totalComprado.toFixed(2);
+            // document.getElementById('saldoRestante').textContent = (presupuesto - totalComprado).toFixed(2);
 
             // Actualizar totalComprado y poner en negrita con style inline
             const totalCompradoSpan = document.getElementById('totalComprado');
@@ -224,13 +255,32 @@
 
             localStorage.setItem('listas', JSON.stringify(listas));
             console.log('se ha guardado la lista')
+            // alert('¡Lista guardada!');
+            // window.location.href = 'index.html';
         }
 
         // Inicializar al cargar la página
         window.onload = function () {
             cargarListaParaEditar();
             addUltimo();
+            /*
+            let ultimo;
+            // Solo agregamos un nuevo producto si el último ya tiene algo escrito
+            if (items.length > 0) {
+                ultimo = items[items.length - 1];
+                console.log(ultimo.nombre)
+                console.log(ultimo.precio)
+                if (
+                    ultimo &&
+                    ultimo.nombre.trim() !== '' &&
+                    typeof ultimo.precio === 'number' &&
+                    !isNaN(ultimo.precio)
+                ) {
+                    agregarItem();
 
+                }
+            }
+            */
             // Guardar automáticamente al cambiar el nombre (además del blur que ya tienes)
             document.getElementById('listaNombre').addEventListener('blur', function () {
                 guardarLista();

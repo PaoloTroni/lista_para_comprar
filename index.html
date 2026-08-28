@@ -68,7 +68,9 @@
                 if (listasJSON) {
                     const listas = JSON.parse(listasJSON);
 
-                    listas.forEach((lista, index) => {
+                    listas.slice().reverse().forEach((lista, index) => {
+                        index = listas.length -1-index;
+                        
                         const item = document.createElement("li");
                         item.className = "list-group-item d-flex justify-content-between align-items-center";
 
